@@ -55,9 +55,11 @@ const Navbar = () => {
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <div className="text-2xl font-bold text-gray-900">
+          <div className="text-2xl font-bold text-gray-900" style={{
+          backgroundImage: `url('${process.env.PUBLIC_URL}/logo.png')`,
+        }}>
             {/* GYM<span className="text-red-600">.</span> */}
-            <img src="/logo.png" alt="Gym Logo" className="h-8 w-auto" />
+            // <img src="/logo.png" alt="Gym Logo" className="h-8 w-auto" />
           </div>
 
           {/* Menu Desktop */}
