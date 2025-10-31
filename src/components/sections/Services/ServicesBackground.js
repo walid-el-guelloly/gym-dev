@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 /**
  * Composant pour le background avec image et overlay
@@ -7,10 +7,10 @@ const ServicesBackground = () => {
   return (
     <div className="absolute inset-0 overflow-hidden">
       {/* Background Image avec overlay */}
-      <div 
+      <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed"
         style={{
-          backgroundImage: "url('/backimgservices.avif')"
+          backgroundImage: `url(${process.env.PUBLIC_URL}/backimgservices.avif)`,
         }}
       >
         {/* Overlay noir pour meilleure visibilité */}
