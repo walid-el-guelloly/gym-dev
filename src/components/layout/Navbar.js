@@ -53,7 +53,11 @@ const Navbar = ({ onDashboardClick, onSectionChange }) => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div className="text-2xl font-bold text-gray-900">
-            <img src="/logo.png" alt="Gym Logo" className="h-8 w-auto" />
+            <img
+              src={`${process.env.PUBLIC_URL}/logo.png`}
+              alt="Gym Logo"
+              className="h-8 w-auto"
+            />{" "}
           </div>
 
           {/* Menu Desktop */}
