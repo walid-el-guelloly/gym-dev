@@ -1,4 +1,5 @@
 import React from "react";
+
 /**
  * Composant pour le background avec image et overlay
  */
@@ -9,7 +10,7 @@ const HeroBackground = () => {
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: `url(${process.env.PUBLIC_URL}/backimage.jpg)`,
+          backgroundImage: `url('${process.env.PUBLIC_URL}/backimage.jpg')`,
         }}
       >
         {/* Overlay sombre pour meilleure lisibilité */}

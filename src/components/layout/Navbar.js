@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
-// import logo from "./assets/logo.png";
 import { useScrollSpy } from "../../hooks/useScrollSpy";
 
 /**
- * Barre de navigation complète avec menu mobile
+ * Barre de navigation complète avec gestion du dashboard
  */
-const Navbar = () => {
+const Navbar = ({ onDashboardClick, onSectionChange }) => {
   const activeSection = useScrollSpy();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -19,22 +18,20 @@ const Navbar = () => {
   ];
 
   const scrollToSection = (sectionId) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      window.scrollTo({
-        top: element.offsetTop - 80,
-        behavior: "smooth",
-      });
-    }
-    setIsMobileMenuOpen(false); // Fermer le menu mobile après clic
+    onSectionChange(sectionId);
+    setIsMobileMenuOpen(false);
   };
-  //   fonction pour ajouter du background pour navbar apres un 10% de scroll
+
+  // Gestion du clic sur Dashboard
+  const handleDashboardClick = () => {
+    onDashboardClick();
+    setIsMobileMenuOpen(false);
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      const pageHeight =
-        document.documentElement.scrollHeight - window.innerHeight;
-      // 10% du scroll
+      const pageHeight = document.documentElement.scrollHeight - window.innerHeight;
       if (pageHeight > 0 && scrollY / pageHeight > 0.1) {
         setScrolled(true);
       } else {
@@ -47,16 +44,14 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`fixed top-0 w-full z-50  h-16 transition-all duration-300 ${
+      className={`fixed top-0 w-full z-50 h-16 transition-all duration-300 ${
         scrolled ? "bg-black bg-opacity-90 shadow-md" : "bg-transparent"
       }`}
     >
-      {" "}
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div className="text-2xl font-bold text-gray-900">
-            {/* GYM<span className="text-red-600">.</span> */}
             <img src="/logo.png" alt="Gym Logo" className="h-8 w-auto" />
           </div>
 
@@ -73,20 +68,25 @@ const Navbar = () => {
                 }`}
               >
                 {item.label}
-
-                {/* Ligne active */}
                 {activeSection === item.id && (
                   <span className="absolute bottom-0 left-0 w-full h-0.5 bg-red-600"></span>
                 )}
-
-                {/* Ligne hover */}
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-red-600 transition-all duration-300 group-hover:w-full"></span>
               </button>
             ))}
           </div>
 
-          {/* Bouton Join Now Desktop */}
-          <div className="hidden md:block">
+          {/* Boutons à droite */}
+          <div className="hidden md:flex items-center space-x-4">
+            {/* Bouton Dashboard */}
+            <button
+              onClick={handleDashboardClick}
+              className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-blue-700 transition-all duration-300 transform hover:scale-105"
+            >
+              Dashboard
+            </button>
+
+            {/* Bouton Join Now */}
             <button
               onClick={() => scrollToSection("pricing")}
               className="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-red-700 transition-all duration-300 transform hover:scale-105"
@@ -97,7 +97,7 @@ const Navbar = () => {
 
           {/* Menu Mobile Burger */}
           <button
-            className="md:hidden text-gray-700"
+            className="md:hidden text-white"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             <svg
@@ -134,6 +134,15 @@ const Navbar = () => {
                     {item.label}
                   </button>
                 ))}
+                
+                {/* Bouton Dashboard Mobile */}
+                <button
+                  onClick={handleDashboardClick}
+                  className="bg-blue-600 text-white py-2 px-4 rounded-md font-semibold hover:bg-blue-700 transition-all duration-300 text-center"
+                >
+                  Dashboard
+                </button>
+
                 <button
                   onClick={() => scrollToSection("pricing")}
                   className="bg-red-600 text-white py-2 px-4 rounded-md font-semibold hover:bg-red-700 transition-all duration-300 text-center"
