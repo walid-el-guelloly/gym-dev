@@ -31,7 +31,8 @@ const Navbar = ({ onDashboardClick, onSectionChange }) => {
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      const pageHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const pageHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
       if (pageHeight > 0 && scrollY / pageHeight > 0.1) {
         setScrolled(true);
       } else {
@@ -134,7 +135,7 @@ const Navbar = ({ onDashboardClick, onSectionChange }) => {
                     {item.label}
                   </button>
                 ))}
-                
+
                 {/* Bouton Dashboard Mobile */}
                 <button
                   onClick={handleDashboardClick}
