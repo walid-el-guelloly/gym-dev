@@ -1,4 +1,5 @@
 import React from "react";
+
 /**
  * Composant pour le background avec image et overlay
  */

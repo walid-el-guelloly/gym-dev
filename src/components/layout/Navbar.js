@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-// import logo from "./assets/logo.png";
 import { useScrollSpy } from "../../hooks/useScrollSpy";
 
 /**
- * Barre de navigation complète avec menu mobile
+ * Barre de navigation complète avec gestion du dashboard
  */
 const Navbar = ({ currentPath }) => {
+const Navbar = ({ onDashboardClick, onSectionChange }) => {
   const activeSection = useScrollSpy();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -41,14 +41,21 @@ const Navbar = ({ currentPath }) => {
     } else {
       window.location.href = path;
     }
+    onSectionChange(sectionId);
+    setIsMobileMenuOpen(false);
   };
-  //   fonction pour ajouter du background pour navbar apres un 10% de scroll
+
+  // Gestion du clic sur Dashboard
+  const handleDashboardClick = () => {
+    onDashboardClick();
+    setIsMobileMenuOpen(false);
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
       const pageHeight =
         document.documentElement.scrollHeight - window.innerHeight;
-      // 10% du scroll
       if (pageHeight > 0 && scrollY / pageHeight > 0.1) {
         setScrolled(true);
       } else {
@@ -61,11 +68,10 @@ const Navbar = ({ currentPath }) => {
 
   return (
     <nav
-      className={`fixed top-0 w-full z-50  h-16 transition-all duration-300 ${
+      className={`fixed top-0 w-full z-50 h-16 transition-all duration-300 ${
         scrolled ? "bg-black bg-opacity-90 shadow-md" : "bg-transparent"
       }`}
     >
-      {" "}
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
@@ -77,6 +83,12 @@ const Navbar = ({ currentPath }) => {
           >
             {/* GYM<span className="text-red-600">.</span> */}
             {/* <img src="/logo.png" alt="Gym Logo" className="h-8 w-auto" /> */}
+          <div className="text-2xl font-bold text-gray-900">
+            <img
+              src={`${process.env.PUBLIC_URL}/logo.png`}
+              alt="Gym Logo"
+              className="h-8 w-auto"
+            />{" "}
           </div>
 
           {/* Menu Desktop */}
@@ -106,10 +118,36 @@ const Navbar = ({ currentPath }) => {
                 </button>
               );
             })}
+            {navItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => scrollToSection(item.id)}
+                className={`relative group px-2 py-1 text-sm font-medium transition-all duration-300 ${
+                  activeSection === item.id
+                    ? "text-red-600 font-bold"
+                    : "text-white hover:text-red-500"
+                }`}
+              >
+                {item.label}
+                {activeSection === item.id && (
+                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-red-600"></span>
+                )}
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-red-600 transition-all duration-300 group-hover:w-full"></span>
+              </button>
+            ))}
           </div>
 
-          {/* Bouton Join Now Desktop */}
-          <div className="hidden md:block">
+          {/* Boutons à droite */}
+          <div className="hidden md:flex items-center space-x-4">
+            {/* Bouton Dashboard */}
+            <button
+              onClick={handleDashboardClick}
+              className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-blue-700 transition-all duration-300 transform hover:scale-105"
+            >
+              Dashboard
+            </button>
+
+            {/* Bouton Join Now */}
             <button
               onClick={() => navigateTo("/login")}
               className="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-red-700 transition-all duration-300 transform hover:scale-105"
@@ -120,7 +158,7 @@ const Navbar = ({ currentPath }) => {
 
           {/* Menu Mobile Burger */}
           <button
-            className="md:hidden text-gray-700"
+            className="md:hidden text-white"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             <svg
@@ -162,6 +200,28 @@ const Navbar = ({ currentPath }) => {
                     </button>
                   );
                 })}
+                {navItems.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => scrollToSection(item.id)}
+                    className={`text-left py-2 px-4 font-medium transition-all duration-300 ${
+                      activeSection === item.id
+                        ? "text-red-600 bg-red-50 rounded-md"
+                        : "text-gray-700 hover:text-red-500 hover:bg-gray-50 rounded-md"
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+
+                {/* Bouton Dashboard Mobile */}
+                <button
+                  onClick={handleDashboardClick}
+                  className="bg-blue-600 text-white py-2 px-4 rounded-md font-semibold hover:bg-blue-700 transition-all duration-300 text-center"
+                >
+                  Dashboard
+                </button>
+
                 <button
                   onClick={() => navigateTo("/login")}
                   className="bg-red-600 text-white py-2 px-4 rounded-md font-semibold hover:bg-red-700 transition-all duration-300 text-center"
