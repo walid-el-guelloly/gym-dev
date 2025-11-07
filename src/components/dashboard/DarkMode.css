@@ -1,0 +1,304 @@
+/* Mode Sombre Global pour tous les composants du Dashboard */
+
+/* FORCER TOUS LES FONDS BLANCS EN SOMBRE - ULTRA PRIORITAIRE */
+.dark-mode-wrapper .bg-white,
+.dark-mode-wrapper .rounded-xl.bg-white,
+.dark-mode-wrapper .rounded-lg.bg-white,
+.dark-mode-wrapper .rounded-2xl.bg-white,
+.dark-mode-wrapper .rounded-md.bg-white,
+.dark-mode-wrapper .rounded.bg-white,
+.dark-mode-wrapper [class*="bg-white"],
+.dark-mode-wrapper div[class*="bg-white"],
+.dark-mode-wrapper section[class*="bg-white"],
+.dark-mode-wrapper article[class*="bg-white"],
+.dark-mode-wrapper .shadow-sm.bg-white,
+.dark-mode-wrapper .shadow.bg-white,
+.dark-mode-wrapper .shadow-md.bg-white,
+.dark-mode-wrapper .shadow-lg.bg-white,
+.dark-mode-wrapper .p-6.bg-white,
+.dark-mode-wrapper .p-4.bg-white,
+.dark-mode-wrapper .p-8.bg-white {
+  background-color: rgba(30, 41, 59, 0.5) !important;
+  background: rgba(30, 41, 59, 0.5) !important;
+  backdrop-filter: blur(20px) !important;
+  border-color: rgba(71, 85, 105, 0.5) !important;
+}
+
+/* Forcer TOUS les divs, sections avec bg-white */
+.dark-mode-wrapper div.bg-white,
+.dark-mode-wrapper section.bg-white,
+.dark-mode-wrapper article.bg-white,
+.dark-mode-wrapper main.bg-white {
+  background-color: rgba(30, 41, 59, 0.5) !important;
+  background: rgba(30, 41, 59, 0.5) !important;
+}
+
+.dark-mode-wrapper .border-gray-200 {
+  border-color: rgba(71, 85, 105, 0.5) !important;
+}
+
+/* FORCER TOUS LES TEXTES EN BLANC/CLAIR - ULTRA PRIORITAIRE */
+.dark-mode-wrapper .text-gray-900,
+.dark-mode-wrapper [class*="text-gray-900"],
+.dark-mode-wrapper h1,
+.dark-mode-wrapper h2,
+.dark-mode-wrapper h3,
+.dark-mode-wrapper h4,
+.dark-mode-wrapper h5,
+.dark-mode-wrapper h6,
+.dark-mode-wrapper .font-bold,
+.dark-mode-wrapper .font-semibold,
+.dark-mode-wrapper strong {
+  color: #ffffff !important;
+}
+
+.dark-mode-wrapper .text-gray-800,
+.dark-mode-wrapper [class*="text-gray-800"],
+.dark-mode-wrapper .text-gray-700,
+.dark-mode-wrapper [class*="text-gray-700"] {
+  color: #e2e8f0 !important;
+}
+
+.dark-mode-wrapper .text-gray-600,
+.dark-mode-wrapper [class*="text-gray-600"],
+.dark-mode-wrapper p:not([class*="text-white"]):not([class*="text-red"]):not([class*="text-blue"]):not([class*="text-green"]) {
+  color: #94a3b8 !important;
+}
+
+.dark-mode-wrapper .text-gray-500,
+.dark-mode-wrapper [class*="text-gray-500"] {
+  color: #64748b !important;
+}
+
+.dark-mode-wrapper .text-gray-400,
+.dark-mode-wrapper [class*="text-gray-400"] {
+  color: #94a3b8 !important;
+}
+
+/* Forcer texte noir en blanc */
+.dark-mode-wrapper .text-black,
+.dark-mode-wrapper [class*="text-black"] {
+  color: #ffffff !important;
+}
+
+/* Labels et spans */
+.dark-mode-wrapper label,
+.dark-mode-wrapper span:not([class*="bg-"]):not([class*="text-white"]):not([class*="text-red"]):not([class*="text-blue"]):not([class*="text-green"]):not([class*="text-yellow"]):not([class*="text-purple"]) {
+  color: #e2e8f0 !important;
+}
+
+/* Backgrounds */
+.dark-mode-wrapper .bg-gray-50 {
+  background-color: rgba(51, 65, 85, 0.3) !important;
+}
+
+.dark-mode-wrapper .bg-gray-100 {
+  background-color: rgba(51, 65, 85, 0.5) !important;
+}
+
+/* Hover states */
+.dark-mode-wrapper .hover\\:bg-gray-50:hover {
+  background-color: rgba(51, 65, 85, 0.5) !important;
+}
+
+.dark-mode-wrapper .hover\\:bg-gray-100:hover {
+  background-color: rgba(71, 85, 105, 0.5) !important;
+}
+
+/* Inputs */
+.dark-mode-wrapper input[type="text"],
+.dark-mode-wrapper input[type="email"],
+.dark-mode-wrapper input[type="tel"],
+.dark-mode-wrapper input[type="number"],
+.dark-mode-wrapper input[type="date"],
+.dark-mode-wrapper input[type="time"],
+.dark-mode-wrapper input[type="search"],
+.dark-mode-wrapper select,
+.dark-mode-wrapper textarea {
+  background-color: rgba(30, 41, 59, 0.5) !important;
+  border-color: rgba(71, 85, 105, 0.5) !important;
+  color: #e2e8f0 !important;
+}
+
+.dark-mode-wrapper input::placeholder,
+.dark-mode-wrapper textarea::placeholder {
+  color: #64748b !important;
+}
+
+.dark-mode-wrapper input:focus,
+.dark-mode-wrapper select:focus,
+.dark-mode-wrapper textarea:focus {
+  border-color: rgba(139, 92, 246, 0.5) !important;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2) !important;
+}
+
+/* Tables */
+.dark-mode-wrapper table {
+  color: #e2e8f0 !important;
+}
+
+.dark-mode-wrapper thead {
+  background-color: rgba(30, 41, 59, 0.5) !important;
+  border-color: rgba(71, 85, 105, 0.5) !important;
+  color: #ffffff !important;
+}
+
+.dark-mode-wrapper thead th {
+  color: #ffffff !important;
+}
+
+.dark-mode-wrapper tbody tr {
+  border-color: rgba(71, 85, 105, 0.3) !important;
+  color: #e2e8f0 !important;
+}
+
+.dark-mode-wrapper tbody td {
+  color: #e2e8f0 !important;
+}
+
+.dark-mode-wrapper tbody tr:hover {
+  background-color: rgba(51, 65, 85, 0.3) !important;
+}
+
+/* Badges */
+.dark-mode-wrapper .bg-green-100 {
+  background-color: rgba(16, 185, 129, 0.2) !important;
+}
+
+.dark-mode-wrapper .text-green-800 {
+  color: #6ee7b7 !important;
+}
+
+.dark-mode-wrapper .bg-yellow-100 {
+  background-color: rgba(245, 158, 11, 0.2) !important;
+}
+
+.dark-mode-wrapper .text-yellow-800 {
+  color: #fcd34d !important;
+}
+
+.dark-mode-wrapper .bg-red-100 {
+  background-color: rgba(239, 68, 68, 0.2) !important;
+}
+
+.dark-mode-wrapper .text-red-800 {
+  color: #fca5a5 !important;
+}
+
+.dark-mode-wrapper .bg-blue-100 {
+  background-color: rgba(59, 130, 246, 0.2) !important;
+}
+
+.dark-mode-wrapper .text-blue-800 {
+  color: #93c5fd !important;
+}
+
+/* Modals */
+.dark-mode-wrapper .fixed.inset-0 {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+/* Shadows */
+.dark-mode-wrapper .shadow-sm {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3) !important;
+}
+
+.dark-mode-wrapper .shadow {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.3) !important;
+}
+
+.dark-mode-wrapper .shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Buttons - Garder les gradients tels quels */
+
+/* Cartes avec effet glassmorphism - Forcer le fond sombre */
+.dark-mode-wrapper .rounded-xl.bg-white,
+.dark-mode-wrapper .rounded-lg.bg-white,
+.dark-mode-wrapper .rounded-2xl.bg-white,
+.dark-mode-wrapper div[class*="bg-white"],
+.dark-mode-wrapper section[class*="bg-white"],
+.dark-mode-wrapper article[class*="bg-white"] {
+  background: rgba(30, 41, 59, 0.5) !important;
+  background-color: rgba(30, 41, 59, 0.5) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(71, 85, 105, 0.5) !important;
+}
+
+/* Cartes avec shadow */
+.dark-mode-wrapper .shadow-sm,
+.dark-mode-wrapper .shadow,
+.dark-mode-wrapper .shadow-md,
+.dark-mode-wrapper .shadow-lg {
+  background-color: rgba(30, 41, 59, 0.5) !important;
+}
+
+/* Hover effects avec glow */
+.dark-mode-wrapper .rounded-xl:hover,
+.dark-mode-wrapper .rounded-lg:hover {
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.2) !important;
+}
+
+/* Animations */
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.3s ease-out;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.2s ease-out;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.3s ease-out;
+}
+
+/* Scrollbars */
+.dark-mode-wrapper ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.dark-mode-wrapper ::-webkit-scrollbar-track {
+  background: rgba(30, 41, 59, 0.5);
+}
+
+.dark-mode-wrapper ::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.5);
+  border-radius: 4px;
+}
+
+.dark-mode-wrapper ::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 92, 246, 0.7);
+}

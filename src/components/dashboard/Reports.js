@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 /**
  * Rapports et analytics (Manager seulement)
  */
-const Reports = ({ userRole }) => {
+const Reports = ({ userRole, isDarkMode = true }) => {
   const [reportType, setReportType] = useState('membership');
 
   if (userRole !== 'manager') {
@@ -63,14 +63,18 @@ const Reports = ({ userRole }) => {
   const currentReport = reportData[reportType];
 
   return (
-    <div className="space-y-6">
+    <div className={`space-y-6 ${isDarkMode ? 'dark-mode-wrapper' : ''}`}>
       {/* En-tête */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
         <div>
-          <h1 className="text-2xl font-bold text-[#111827]">
+          <h1 className={`text-2xl font-bold ${
+            isDarkMode ? 'text-white' : 'text-gray-900'
+          }`}>
             Rapports et Analytics
           </h1>
-          <p className="text-[#6B7280] text-sm mt-1">
+          <p className={`text-sm mt-1 ${
+            isDarkMode ? 'text-slate-400' : 'text-gray-600'
+          }`}>
             Analysez les performances détaillées
           </p>
         </div>
@@ -78,7 +82,11 @@ const Reports = ({ userRole }) => {
           <select
             value={reportType}
             onChange={(e) => setReportType(e.target.value)}
-            className="border border-gray-200 rounded-lg px-4 py-2 bg-white text-[#111827] focus:ring-2 focus:ring-[#111827] focus:border-transparent transition-all"
+            className={`border rounded-lg px-4 py-2 focus:ring-2 focus:border-transparent transition-all ${
+              isDarkMode 
+                ? 'bg-slate-800/50 border-slate-700/50 text-white focus:ring-purple-500/20' 
+                : 'bg-white border-gray-200 text-gray-900 focus:ring-gray-900/20'
+            }`}
           >
             <option value="membership">Abonnements</option>
             <option value="revenue">Revenus</option>
@@ -94,16 +102,28 @@ const Reports = ({ userRole }) => {
       </div>
 
       {/* Carte du rapport */}
-      <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-        <h2 className="text-xl font-semibold text-[#111827] mb-6">
+      <div className={`rounded-xl p-6 shadow-sm border transition-all duration-300 ${
+        isDarkMode 
+          ? 'bg-slate-800/50 backdrop-blur-xl border-slate-700/50' 
+          : 'bg-white border-gray-200'
+      }`}>
+        <h2 className={`text-xl font-semibold mb-6 ${
+          isDarkMode ? 'text-white' : 'text-gray-900'
+        }`}>
           {currentReport.title}
         </h2>
 
         {/* Graphique simple */}
         <div className="space-y-6">
           {currentReport.data.map((item, index) => (
-            <div key={index} className="flex items-center justify-between p-3 rounded-lg hover:bg-[#F9FAFB] transition-colors">
-              <span className="text-sm font-semibold text-[#111827] w-16">
+            <div key={index} className={`flex items-center justify-between p-3 rounded-lg transition-colors ${
+              isDarkMode 
+                ? 'hover:bg-slate-700/30' 
+                : 'hover:bg-gray-50'
+            }`}>
+              <span className={`text-sm font-semibold w-16 ${
+                isDarkMode ? 'text-white' : 'text-gray-900'
+              }`}>
                 {item.month}
               </span>
               <div className="flex-1 mx-4">

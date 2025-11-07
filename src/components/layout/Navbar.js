@@ -4,8 +4,7 @@ import { useScrollSpy } from "../../hooks/useScrollSpy";
 /**
  * Barre de navigation complète avec gestion du dashboard
  */
-const Navbar = ({ currentPath }) => {
-const Navbar = ({ onDashboardClick, onSectionChange }) => {
+const Navbar = ({ currentPath, onDashboardClick, onSectionChange }) => {
   const activeSection = useScrollSpy();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -41,7 +40,6 @@ const Navbar = ({ onDashboardClick, onSectionChange }) => {
     } else {
       window.location.href = path;
     }
-    onSectionChange(sectionId);
     setIsMobileMenuOpen(false);
   };
 
@@ -75,20 +73,12 @@ const Navbar = ({ onDashboardClick, onSectionChange }) => {
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <div
-            className="text-2xl font-bold text-gray-900"
-            style={{
-              backgroundImage: `url('${process.env.PUBLIC_URL}/logo.png')`,
-            }}
-          >
-            {/* GYM<span className="text-red-600">.</span> */}
-            {/* <img src="/logo.png" alt="Gym Logo" className="h-8 w-auto" /> */}
           <div className="text-2xl font-bold text-gray-900">
             <img
               src={`${process.env.PUBLIC_URL}/logo.png`}
               alt="Gym Logo"
               className="h-8 w-auto"
-            />{" "}
+            />
           </div>
 
           {/* Menu Desktop */}
@@ -118,23 +108,6 @@ const Navbar = ({ onDashboardClick, onSectionChange }) => {
                 </button>
               );
             })}
-            {navItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className={`relative group px-2 py-1 text-sm font-medium transition-all duration-300 ${
-                  activeSection === item.id
-                    ? "text-red-600 font-bold"
-                    : "text-white hover:text-red-500"
-                }`}
-              >
-                {item.label}
-                {activeSection === item.id && (
-                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-red-600"></span>
-                )}
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-red-600 transition-all duration-300 group-hover:w-full"></span>
-              </button>
-            ))}
           </div>
 
           {/* Boutons à droite */}

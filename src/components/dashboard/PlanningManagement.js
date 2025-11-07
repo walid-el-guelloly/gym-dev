@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useDashboard } from './DashboardContext';
+import './DarkMode.css';
 
 /**
- * Gestion de Planning - Planification des cours (Kickboxing, Cardio, etc.)
+ * Gestion de Planning - Mode sombre ultra-moderne
  * Fonctionnalités: Créer cours, Ajouter participants, Gérer horaires
  */
-const PlanningManagement = ({ userRole }) => {
+const PlanningManagement = ({ userRole, isDarkMode = true }) => {
   const { planning, addCourse, updateCourse, addParticipantToCourse, updateParticipant, removeParticipant } = useDashboard();
   const [showCourseForm, setShowCourseForm] = useState(false);
   const [showParticipantForm, setShowParticipantForm] = useState(false);
@@ -150,7 +151,7 @@ const PlanningManagement = ({ userRole }) => {
   });
 
   return (
-    <div className="space-y-6">
+    <div className={`space-y-6 ${isDarkMode ? 'dark-mode-wrapper' : ''}`}>
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
         <div>
@@ -390,34 +391,52 @@ const PlanningManagement = ({ userRole }) => {
 
                 {/* Nom du coach */}
                 <div>
-                  <label className="block text-sm font-semibold text-[#111827] mb-2">
-                    Nom du Coach <span className="text-[#DC2626]">*</span>
+                  <label className={`block text-sm font-semibold mb-2 ${
+                    isDarkMode ? 'text-white' : 'text-gray-900'
+                  }`}>
+                    Nom du Coach <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     required
                     value={courseForm.coachName}
                     onChange={(e) => setCourseForm({...courseForm, coachName: e.target.value})}
-                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3B82F6] focus:border-transparent"
+                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all ${
+                      isDarkMode 
+                        ? 'bg-slate-700/50 border-slate-600 text-white placeholder-slate-400 focus:ring-purple-500/50 focus:border-purple-500' 
+                        : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400 focus:ring-blue-500/50 focus:border-blue-500'
+                    }`}
                     placeholder="Ex: Mohamed Alami"
                   />
                 </div>
 
                 {/* Jours de la semaine avec horaires individuels */}
                 <div>
-                  <label className="block text-sm font-semibold text-[#111827] mb-2">
-                    Jours et Horaires <span className="text-[#DC2626]">*</span>
+                  <label className={`block text-sm font-semibold mb-2 ${
+                    isDarkMode ? 'text-white' : 'text-gray-900'
+                  }`}>
+                    Jours et Horaires <span className="text-red-500">*</span>
                   </label>
                   <div className="space-y-3">
                     {daysOfWeek.map(day => (
-                      <div key={day} className="flex items-center space-x-3 p-3 bg-[#F9FAFB] rounded-lg">
+                      <div key={day} className={`flex items-center space-x-3 p-3 rounded-lg transition-colors ${
+                        isDarkMode 
+                          ? 'bg-slate-700/30 hover:bg-slate-700/50' 
+                          : 'bg-gray-50 hover:bg-gray-100'
+                      }`}>
                         <input
                           type="checkbox"
                           checked={courseForm.days.includes(day)}
                           onChange={() => handleDayToggle(day)}
-                          className="w-5 h-5 text-[#3B82F6] rounded focus:ring-2 focus:ring-[#3B82F6]"
+                          className={`w-5 h-5 rounded focus:ring-2 ${
+                            isDarkMode 
+                              ? 'text-purple-600 focus:ring-purple-500/50 bg-slate-600 border-slate-500' 
+                              : 'text-blue-600 focus:ring-blue-500/50'
+                          }`}
                         />
-                        <span className="font-medium text-[#111827] w-24">{day}</span>
+                        <span className={`font-medium w-24 ${
+                          isDarkMode ? 'text-white' : 'text-gray-900'
+                        }`}>{day}</span>
                         
                         {courseForm.days.includes(day) && (
                           <div className="flex items-center space-x-2 flex-1">
@@ -425,14 +444,22 @@ const PlanningManagement = ({ userRole }) => {
                               type="time"
                               value={courseForm.schedule[day]?.startTime || '09:00'}
                               onChange={(e) => updateDaySchedule(day, 'startTime', e.target.value)}
-                              className="px-3 py-1.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#3B82F6] text-sm"
+                              className={`px-3 py-1.5 border rounded-lg focus:ring-2 text-sm transition-all ${
+                                isDarkMode 
+                                  ? 'bg-slate-700/50 border-slate-600 text-white focus:ring-purple-500/50 focus:border-purple-500' 
+                                  : 'bg-white border-gray-200 text-gray-900 focus:ring-blue-500/50 focus:border-blue-500'
+                              }`}
                             />
-                            <span className="text-[#6B7280]">→</span>
+                            <span className={isDarkMode ? 'text-slate-400' : 'text-gray-600'}>→</span>
                             <input
                               type="time"
                               value={courseForm.schedule[day]?.endTime || '10:00'}
                               onChange={(e) => updateDaySchedule(day, 'endTime', e.target.value)}
-                              className="px-3 py-1.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#3B82F6] text-sm"
+                              className={`px-3 py-1.5 border rounded-lg focus:ring-2 text-sm transition-all ${
+                                isDarkMode 
+                                  ? 'bg-slate-700/50 border-slate-600 text-white focus:ring-purple-500/50 focus:border-purple-500' 
+                                  : 'bg-white border-gray-200 text-gray-900 focus:ring-blue-500/50 focus:border-blue-500'
+                              }`}
                             />
                           </div>
                         )}
@@ -443,8 +470,10 @@ const PlanningManagement = ({ userRole }) => {
 
                 {/* Capacité maximale */}
                 <div>
-                  <label className="block text-sm font-semibold text-[#111827] mb-2">
-                    Nombre Maximum de Participants <span className="text-[#DC2626]">*</span>
+                  <label className={`block text-sm font-semibold mb-2 ${
+                    isDarkMode ? 'text-white' : 'text-gray-900'
+                  }`}>
+                    Nombre Maximum de Participants <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="number"
@@ -453,7 +482,11 @@ const PlanningManagement = ({ userRole }) => {
                     max="50"
                     value={courseForm.maxParticipants}
                     onChange={(e) => setCourseForm({...courseForm, maxParticipants: parseInt(e.target.value)})}
-                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3B82F6] focus:border-transparent"
+                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all ${
+                      isDarkMode 
+                        ? 'bg-slate-700/50 border-slate-600 text-white placeholder-slate-400 focus:ring-purple-500/50 focus:border-purple-500' 
+                        : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400 focus:ring-blue-500/50 focus:border-blue-500'
+                    }`}
                   />
                 </div>
 

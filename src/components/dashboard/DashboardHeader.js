@@ -1,17 +1,25 @@
 import React, { useState } from 'react';
+import DarkModeToggle from './DarkModeToggle';
 
 /**
- * Dashboard Header - Hauteur 64px, Design moderne et professionnel
- * Palette: #3B82F6 (bleu), #8B5CF6 (violet), #111827 (texte)
+ * Dashboard Header - Mode sombre ultra-moderne avec glassmorphism
+ * Design futuriste avec gradients et effets de profondeur
  */
-const DashboardHeader = ({ onMenuToggle, userRole, onLogout, isSidebarOpen, onSidebarToggle, onNavigate }) => {
+const DashboardHeader = ({ onMenuToggle, userRole, onLogout, isSidebarOpen, onSidebarToggle, onNavigate, isDarkMode, onDarkModeToggle }) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
 
   return (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-20 h-16">
+    <header className={`sticky top-0 z-20 h-16 backdrop-blur-xl border-b transition-all duration-300 ${
+      isDarkMode 
+        ? 'bg-slate-900/80 border-slate-700/50' 
+        : 'bg-white/80 border-gray-200'
+    }`}>
       <div className="flex items-center justify-between px-6 h-full">
-        {/* Left Section */}
+        {/* Espace vide pour alignement */}
+        <div className="flex items-center space-x-3">
+        </div>
+        {/* Center Section - Search */}
         <div className="flex items-center space-x-4">
           {/* Mobile Menu Button */}
           <button
@@ -23,15 +31,19 @@ const DashboardHeader = ({ onMenuToggle, userRole, onLogout, isSidebarOpen, onSi
             </svg>
           </button>
 
-          {/* Search Bar */}
+          {/* Search Bar - Glassmorphism */}
           <div className="relative hidden md:block">
             <input
               type="text"
               placeholder="Rechercher membres, paiements..."
-              className="pl-10 pr-4 py-2 w-80 border border-gray-200 rounded-lg bg-[#F9FAFB] text-[#111827] text-sm placeholder-[#6B7280] focus:outline-none focus:ring-2 focus:ring-[#3B82F6] focus:border-transparent focus:bg-white transition-all duration-300"
+              className={`pl-10 pr-4 py-2.5 w-80 rounded-xl text-sm transition-all duration-300 backdrop-blur-sm ${
+                isDarkMode
+                  ? 'bg-slate-800/50 border border-slate-700/50 text-slate-200 placeholder-slate-400 focus:bg-slate-800/70 focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20'
+                  : 'bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-500 focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
+              } focus:outline-none`}
             />
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg className="w-5 h-5 text-[#6B7280]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className={`w-5 h-5 ${isDarkMode ? 'text-slate-400' : 'text-gray-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </div>
@@ -39,7 +51,9 @@ const DashboardHeader = ({ onMenuToggle, userRole, onLogout, isSidebarOpen, onSi
         </div>
 
         {/* Right Section */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-3">
+          {/* Dark Mode Toggle */}
+          <DarkModeToggle isDark={isDarkMode} onToggle={onDarkModeToggle} />
           {/* Actions rapides */}
           <button 
             onClick={() => onNavigate && onNavigate('members', 'add')}
@@ -51,12 +65,6 @@ const DashboardHeader = ({ onMenuToggle, userRole, onLogout, isSidebarOpen, onSi
             <span>Nouveau membre</span>
           </button>
           
-          <button className="hidden lg:flex items-center space-x-2 px-4 py-2 bg-white text-[#3B82F6] border border-[#3B82F6] rounded-lg text-sm font-semibold hover:bg-[#EEF2FF] transition-all duration-300">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-            </svg>
-            <span>Paiement</span>
-          </button>
           
           {/* Notifications */}
           <div className="relative">

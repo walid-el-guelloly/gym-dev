@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useDashboard } from './DashboardContext';
+import './DarkMode.css';
 
 const INITIAL_PAYMENTS_LIMIT = 4;
 
 /**
- * Gestion des paiements - Synchronisé avec les inscriptions membres et cours
+ * Gestion des paiements - Mode sombre ultra-moderne
  */
-const PaymentsManagement = ({ userRole }) => {
+const PaymentsManagement = ({ userRole, isDarkMode = true }) => {
   const { payments: paymentsFromContext } = useDashboard();
   const [selectedPeriod, setSelectedPeriod] = useState('month');
   const [showAllPayments, setShowAllPayments] = useState(false);
@@ -60,7 +61,7 @@ const PaymentsManagement = ({ userRole }) => {
 
 
   return (
-    <div className="space-y-6">
+    <div className={`space-y-6 ${isDarkMode ? 'dark-mode-wrapper' : ''}`}>
       {/* En-tête */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
         <div>
@@ -154,15 +155,25 @@ const PaymentsManagement = ({ userRole }) => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Derniers paiements */}
-        <div className="lg:col-span-2 bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+        <div className={`lg:col-span-2 rounded-xl p-6 shadow-sm border transition-all duration-300 ${
+          isDarkMode 
+            ? 'bg-slate-800/50 backdrop-blur-xl border-slate-700/50' 
+            : 'bg-white border-gray-200'
+        }`}>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-[#111827]">
+            <h2 className={`text-lg font-semibold ${
+              isDarkMode ? 'text-white' : 'text-gray-900'
+            }`}>
               Derniers Paiements
             </h2>
             {payments.length > INITIAL_PAYMENTS_LIMIT && (
               <button
                 onClick={() => setShowAllPayments(!showAllPayments)}
-                className="text-sm text-[#3B82F6] hover:text-[#2563EB] font-medium transition-colors"
+                className={`text-sm font-medium transition-colors ${
+                  isDarkMode 
+                    ? 'text-purple-400 hover:text-purple-300' 
+                    : 'text-blue-600 hover:text-blue-700'
+                }`}
               >
                 {showAllPayments ? 'Voir moins' : `Voir tout (${payments.length})`}
               </button>
@@ -172,28 +183,46 @@ const PaymentsManagement = ({ userRole }) => {
             {(showAllPayments ? payments : payments.slice(0, INITIAL_PAYMENTS_LIMIT)).map((payment) => (
               <div
                 key={payment.id}
-                className="flex items-center justify-between p-4 rounded-lg bg-[#F9FAFB] hover:bg-gray-100 transition-colors"
+                className={`flex items-center justify-between p-4 rounded-lg transition-all duration-300 hover:scale-[1.02] ${
+                  isDarkMode 
+                    ? 'bg-slate-700/30 hover:bg-slate-700/50' 
+                    : 'bg-gray-50 hover:bg-gray-100'
+                }`}
               >
                 <div className="flex items-center space-x-4">
-                  <div className="w-10 h-10 bg-[#EEF2FF] rounded-full flex items-center justify-center">
-                    <span className="text-[#3B82F6] font-semibold text-xs">
-                      {payment.amount || payment.amount?.toString().split(' ')[0] || '0'}
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                    isDarkMode 
+                      ? 'bg-purple-500/20' 
+                      : 'bg-blue-50'
+                  }`}>
+                    <span className={`font-semibold text-xs ${
+                      isDarkMode ? 'text-purple-400' : 'text-blue-600'
+                    }`}>
+                      {(payment.memberName || payment.member || '').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}
                     </span>
                   </div>
                   <div>
-                    <p className="font-medium text-[#111827]">
+                    <p className={`font-medium ${
+                      isDarkMode ? 'text-white' : 'text-gray-900'
+                    }`}>
                       {payment.memberName || payment.member}
                     </p>
-                    <p className="text-sm text-[#6B7280]">
+                    <p className={`text-sm ${
+                      isDarkMode ? 'text-slate-400' : 'text-gray-600'
+                    }`}>
                       {payment.subscriptionType || payment.type} • {payment.type || 'Sur place'}
                     </p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="font-semibold text-[#111827]">
+                  <p className={`font-semibold ${
+                    isDarkMode ? 'text-white' : 'text-gray-900'
+                  }`}>
                     {payment.amount} DH
                   </p>
-                  <p className="text-xs text-[#6B7280] mt-1">
+                  <p className={`text-xs mt-1 ${
+                    isDarkMode ? 'text-slate-500' : 'text-gray-600'
+                  }`}>
                     {payment.date}
                   </p>
                 </div>
@@ -203,8 +232,14 @@ const PaymentsManagement = ({ userRole }) => {
         </div>
 
         {/* Méthodes de paiement */}
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-          <h2 className="text-lg font-semibold text-[#111827] mb-4">
+        <div className={`rounded-xl p-6 shadow-sm border transition-all duration-300 ${
+          isDarkMode 
+            ? 'bg-slate-800/50 backdrop-blur-xl border-slate-700/50' 
+            : 'bg-white border-gray-200'
+        }`}>
+          <h2 className={`text-lg font-semibold mb-4 ${
+            isDarkMode ? 'text-white' : 'text-gray-900'
+          }`}>
             Méthodes de Paiement
           </h2>
           <div className="space-y-4">
@@ -216,10 +251,12 @@ const PaymentsManagement = ({ userRole }) => {
             ].map((item, index) => (
               <div key={index}>
                 <div className="flex justify-between text-sm mb-1">
-                  <span className="text-[#6B7280]">{item.method}</span>
-                  <span className="text-[#111827] font-medium">{item.percentage}%</span>
+                  <span className={isDarkMode ? 'text-slate-400' : 'text-gray-600'}>{item.method}</span>
+                  <span className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{item.percentage}%</span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
+                <div className={`w-full rounded-full h-2 ${
+                  isDarkMode ? 'bg-slate-700/50' : 'bg-gray-200'
+                }`}>
                   <div
                     className={`h-2 rounded-full ${item.color} transition-all duration-500`}
                     style={{ width: `${item.percentage}%` }}

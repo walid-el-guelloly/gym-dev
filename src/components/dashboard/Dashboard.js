@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { DashboardProvider } from './DashboardContext';
 import DashboardLayout from './DashboardLayout';
-import StatsOverview from './StatsOverview';
+import StatsOverviewModern from './StatsOverviewModern';
 import MembersManagement from './MembersManagement';
 import PaymentsManagement from './PaymentsManagement';
 import Reports from './Reports';
@@ -9,8 +9,8 @@ import Settings from './Settings';
 // import Login from './Login';
 
 /**
- * Dashboard GYM Manager - Version moderne et professionnelle
- * Design system: Inter/Poppins, Palette bleu-violet, Spacing 24px
+ * Dashboard - Version ultra-moderne avec mode sombre
+ * Design system: Glassmorphism, Gradients, Mode sombre slate
  */
 const Dashboard = ({ onBackToHome }) => {
   const [currentView, setCurrentView] = useState('stats');
@@ -18,6 +18,7 @@ const Dashboard = ({ onBackToHome }) => {
   const [userRole, setUserRole] = useState('manager'); // Temporairement manager pour tester
   const [periodFilter, setPeriodFilter] = useState('30d'); // 7d, 30d, 12m, custom
   const [memberAction, setMemberAction] = useState(null); // 'add', 'edit', null
+  const [isDarkMode, setIsDarkMode] = useState(true); // Mode sombre par défaut
 
   // Fonction de connexion (à intégrer avec le Login de votre collègue)
   const handleLogin = (email, password) => {
@@ -85,26 +86,28 @@ const Dashboard = ({ onBackToHome }) => {
   const renderContent = () => {
     switch (currentView) {
       case 'stats':
-        return <StatsOverview userRole={userRole} periodFilter={periodFilter} onPeriodChange={setPeriodFilter} />;
+        return <StatsOverviewModern userRole={userRole} periodFilter={periodFilter} onPeriodChange={setPeriodFilter} isDarkMode={isDarkMode} />;
       case 'members':
-        return <MembersManagement userRole={userRole} action={memberAction} onActionComplete={() => setMemberAction(null)} />;
+        return <MembersManagement userRole={userRole} action={memberAction} onActionComplete={() => setMemberAction(null)} isDarkMode={isDarkMode} />;
       case 'payments':
-        return <PaymentsManagement userRole={userRole} />;
+        return <PaymentsManagement userRole={userRole} isDarkMode={isDarkMode} />;
       case 'planning':
         const PlanningManagement = require('./PlanningManagement').default;
-        return <PlanningManagement userRole={userRole} />;
+        return <PlanningManagement userRole={userRole} isDarkMode={isDarkMode} />;
       case 'reports':
-        return <Reports userRole={userRole} />;
+        return <Reports userRole={userRole} isDarkMode={isDarkMode} />;
       case 'settings':
-        return <Settings userRole={userRole} onLogout={handleLogout} />;
+        return <Settings userRole={userRole} onLogout={handleLogout} isDarkMode={isDarkMode} />;
       default:
-        return <StatsOverview userRole={userRole} periodFilter={periodFilter} onPeriodChange={setPeriodFilter} />;
+        return <StatsOverviewModern userRole={userRole} periodFilter={periodFilter} onPeriodChange={setPeriodFilter} isDarkMode={isDarkMode} />;
     }
   };
 
   return (
     <DashboardProvider>
-      <div className="min-h-screen bg-[#F9FAFB]">
+      <div className={`min-h-screen transition-colors duration-300 ${
+        isDarkMode ? 'bg-slate-950' : 'bg-[#F9FAFB]'
+      }`}>
         {/* Dashboard avec barre de retour intégrée */}
         <DashboardLayout 
           onBackToHome={onBackToHome} 
@@ -116,6 +119,8 @@ const Dashboard = ({ onBackToHome }) => {
             onBackToHome();
           }}
           onNavigate={handleNavigate}
+          isDarkMode={isDarkMode}
+          onDarkModeToggle={() => setIsDarkMode(!isDarkMode)}
         >
           {renderContent()}
         </DashboardLayout>

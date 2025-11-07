@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import DashboardHeader from './DashboardHeader';
 
 /**
- * Dashboard Layout - Sidebar 240px, Header 64px, Design moderne
- * Palette: #3B82F6 (bleu), #8B5CF6 (violet), #F9FAFB (bg)
+ * Dashboard Layout - Mode sombre ultra-moderne avec glassmorphism
+ * Design futuriste avec sidebar flottante et effets de profondeur
  */
-const DashboardLayout = ({ children, currentView, onViewChange, userRole, onLogout, onNavigate, onBackToHome }) => {
+const DashboardLayout = ({ children, currentView, onViewChange, userRole, onLogout, onNavigate, onBackToHome, isDarkMode, onDarkModeToggle }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -61,61 +61,96 @@ const DashboardLayout = ({ children, currentView, onViewChange, userRole, onLogo
 
   return (
     <div className="min-h-screen">
-      {/* Sidebar for Desktop - 240px width */}
-      <div className={`hidden md:flex fixed inset-y-0 left-0 bg-white border-r border-gray-200 z-40 transition-all duration-300 ease-in-out ${
+      {/* Sidebar for Desktop - Ultra-moderne avec glassmorphism */}
+      <div className={`hidden md:flex fixed inset-y-0 left-0 z-40 transition-all duration-300 ease-in-out backdrop-blur-xl ${
         isSidebarOpen ? 'w-60' : 'w-20'
+      } ${
+        isDarkMode 
+          ? 'bg-slate-900/80 border-r border-slate-700/50' 
+          : 'bg-white/80 border-r border-gray-200'
       }`}>
         <div className="flex flex-col w-full">
-          {/* Sidebar Header */}
-          <div className="p-5 border-b border-gray-200">
+          {/* Sidebar Header avec gradient */}
+          <div className={`p-5 border-b ${
+            isDarkMode ? 'border-slate-700/50' : 'border-gray-200'
+          }`}>
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-[#3B82F6] to-[#8B5CF6] rounded-xl flex items-center justify-center shadow-sm">
-                <span className="text-white font-bold text-lg">G</span>
+              {/* Logo avec effet glow */}
+              <div className="relative group">
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl blur opacity-75 group-hover:opacity-100 transition-opacity"></div>
+                <div className="relative w-10 h-10 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                </div>
               </div>
               {isSidebarOpen && (
                 <div>
-                  <h1 className="text-base font-bold text-[#111827]">GYM Manager</h1>
-                  <p className="text-xs text-[#6B7280] capitalize">{userRole}</p>
+                  <h1 className={`text-xl font-bold ${
+                    isDarkMode ? 'text-white' : 'text-gray-900'
+                  }`}>
+                    Gym<span className="text-red-600">.</span>
+                  </h1>
+                  <p className={`text-xs capitalize ${
+                    isDarkMode ? 'text-slate-400' : 'text-gray-600'
+                  }`}>{userRole}</p>
                 </div>
               )}
             </div>
           </div>
 
-          {/* Navigation Menu */}
-          <nav className="flex-1 p-3 space-y-1">
+          {/* Navigation Menu - Moderne avec glassmorphism */}
+          <nav className="flex-1 p-3 space-y-2">
             {filteredMenuItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => onViewChange(item.id)}
-                className={`w-full flex items-center px-3 py-2.5 rounded-lg transition-all duration-300 group relative ${
+                className={`w-full flex items-center px-3 py-3 rounded-xl transition-all duration-300 group relative overflow-hidden ${
                   currentView === item.id
-                    ? 'bg-[#EEF2FF] text-[#3B82F6]'
-                    : 'text-[#6B7280] hover:bg-gray-50 hover:text-[#111827]'
+                    ? isDarkMode
+                      ? 'bg-gradient-to-r from-purple-600/20 to-blue-600/20 text-purple-400 shadow-lg shadow-purple-500/20'
+                      : 'bg-gradient-to-r from-blue-50 to-purple-50 text-blue-600'
+                    : isDarkMode
+                      ? 'text-slate-400 hover:bg-slate-800/50 hover:text-white'
+                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                 }`}
               >
-                {/* Indicateur actif (barre gauche) */}
+                {/* Glow effect pour item actif */}
                 {currentView === item.id && (
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-[#3B82F6] rounded-r"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 opacity-10 group-hover:opacity-20 transition-opacity"></div>
                 )}
                 
-                {/* Icône SVG */}
-                <svg 
-                  className={`w-5 h-5 flex-shrink-0 transition-colors duration-300 ${
-                    currentView === item.id ? 'text-[#3B82F6]' : 'text-[#6B7280] group-hover:text-[#111827]'
-                  }`}
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} />
-                </svg>
+                {/* Indicateur actif (barre gauche avec gradient) */}
+                {currentView === item.id && (
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-10 bg-gradient-to-b from-purple-500 to-blue-500 rounded-r shadow-lg"></div>
+                )}
+                
+                {/* Icône avec badge gradient */}
+                <div className={`relative p-2 rounded-lg transition-all duration-300 ${
+                  currentView === item.id
+                    ? 'bg-gradient-to-r from-purple-600 to-blue-600 shadow-lg'
+                    : isDarkMode
+                      ? 'bg-slate-800/50 group-hover:bg-slate-700/50'
+                      : 'bg-gray-100 group-hover:bg-gray-200'
+                }`}>
+                  <svg 
+                    className={`w-5 h-5 flex-shrink-0 transition-colors duration-300 ${
+                      currentView === item.id ? 'text-white' : isDarkMode ? 'text-slate-400 group-hover:text-white' : 'text-gray-600 group-hover:text-gray-900'
+                    }`}
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} />
+                  </svg>
+                </div>
                 
                 {isSidebarOpen && (
                   <>
-                    <span className="ml-3 font-medium text-sm">{item.label}</span>
-                    {/* Badge de notification */}
+                    <span className="ml-3 font-semibold text-sm relative z-10">{item.label}</span>
+                    {/* Badge de notification avec gradient */}
                     {item.notification && (
-                      <span className="ml-auto bg-[#3B82F6] text-white text-xs font-semibold px-2 py-0.5 rounded-full">
+                      <span className="ml-auto bg-gradient-to-r from-orange-500 to-pink-500 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow-lg z-10">
                         {item.notification}
                       </span>
                     )}
@@ -125,16 +160,26 @@ const DashboardLayout = ({ children, currentView, onViewChange, userRole, onLogo
             ))}
           </nav>
           
-          {/* Divider avant settings */}
+          {/* Divider avec gradient */}
           <div className="px-3 py-2">
-            <div className="border-t border-gray-200"></div>
+            <div className={`h-px bg-gradient-to-r ${
+              isDarkMode 
+                ? 'from-transparent via-slate-700 to-transparent' 
+                : 'from-transparent via-gray-300 to-transparent'
+            }`}></div>
           </div>
 
-          {/* Sidebar Toggle */}
-          <div className="p-3 border-t border-gray-200">
+          {/* Sidebar Toggle avec style moderne */}
+          <div className={`p-3 border-t ${
+            isDarkMode ? 'border-slate-700/50' : 'border-gray-200'
+          }`}>
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="w-full flex items-center justify-center p-2 text-[#6B7280] hover:text-[#111827] hover:bg-gray-50 rounded-lg transition-all duration-300"
+              className={`w-full flex items-center justify-center p-3 rounded-xl transition-all duration-300 ${
+                isDarkMode
+                  ? 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+              }`}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isSidebarOpen ? 'M11 19l-7-7 7-7m8 14l-7-7 7-7' : 'M13 5l7 7-7 7M5 5l7 7-7 7'} />
@@ -148,15 +193,23 @@ const DashboardLayout = ({ children, currentView, onViewChange, userRole, onLogo
       <div className={`transition-all duration-300 ease-in-out ${
         isSidebarOpen ? 'md:ml-60' : 'md:ml-20'
       }`}>
-        {/* Barre de retour au-dessus du header */}
+        {/* Barre de retour moderne avec glassmorphism */}
         {onBackToHome && (
-          <div className="bg-white border-b border-gray-200 sticky top-0 z-30 shadow-sm">
+          <div className={`sticky top-0 z-30 backdrop-blur-xl border-b transition-all duration-300 ${
+            isDarkMode 
+              ? 'bg-slate-900/80 border-slate-700/50' 
+              : 'bg-white/80 border-gray-200'
+          }`}>
             <div className="px-6 py-3">
               <button
                 onClick={onBackToHome}
-                className="inline-flex items-center space-x-2 text-[#3B82F6] hover:text-[#2563EB] font-medium transition-colors duration-300"
+                className={`inline-flex items-center space-x-2 font-semibold transition-all duration-300 group ${
+                  isDarkMode
+                    ? 'text-purple-400 hover:text-purple-300'
+                    : 'text-blue-600 hover:text-blue-700'
+                }`}
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
                 <span>Retour au site principal</span>
@@ -167,6 +220,8 @@ const DashboardLayout = ({ children, currentView, onViewChange, userRole, onLogo
         
         <DashboardHeader 
           onMenuToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          isDarkMode={isDarkMode}
+          onDarkModeToggle={onDarkModeToggle}
           userRole={userRole}
           onLogout={onLogout}
           isSidebarOpen={isSidebarOpen}

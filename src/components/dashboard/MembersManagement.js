@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useDashboard } from './DashboardContext';
+import './DarkMode.css';
 
 /**
- * Gestion des Membres - Système complet CRUD
- * Fonctionnalités: Ajouter, Modifier, Supprimer, Calcul automatique des statuts
+ * Gestion des Membres - Mode sombre ultra-moderne
+ * Fonctionnalités: CRUD complet avec glassmorphism
  */
-const MembersManagement = ({ userRole, action, onActionComplete }) => {
+const MembersManagement = ({ userRole, action, onActionComplete, isDarkMode = true }) => {
   const { members, setMembers, addMember: addMemberToContext, updateMember: updateMemberInContext, deleteMember: deleteMemberFromContext } = useDashboard();
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('all');
   const [showForm, setShowForm] = useState(false);
   const [editingMember, setEditingMember] = useState(null);
+  
+  // Système de toast moderne
+  const [toast, setToast] = useState({ show: false, message: '', type: '' });
+  const [confirmDialog, setConfirmDialog] = useState({ show: false, message: '', onConfirm: null });
   
   // Formulaire state
   const [formData, setFormData] = useState({
@@ -74,6 +79,17 @@ const MembersManagement = ({ userRole, action, onActionComplete }) => {
     });
   };
   
+  // Fonction pour afficher un toast
+  const showToast = (message, type = 'success') => {
+    setToast({ show: true, message, type });
+    setTimeout(() => setToast({ show: false, message: '', type: '' }), 4000);
+  };
+
+  // Fonction pour afficher une confirmation
+  const showConfirm = (message, onConfirm) => {
+    setConfirmDialog({ show: true, message, onConfirm });
+  };
+  
   // Gérer le changement de type d'abonnement
   const handleSubscriptionChange = (type) => {
     setFormData({
@@ -93,6 +109,7 @@ const MembersManagement = ({ userRole, action, onActionComplete }) => {
     addMemberToContext(memberData);
     setShowForm(false);
     resetForm();
+    showToast(`✅ Membre "${formData.fullName}" ajouté avec succès!`, 'success');
   };
   
   // Modifier un membre
@@ -117,16 +134,21 @@ const MembersManagement = ({ userRole, action, onActionComplete }) => {
       status: calculateStatus(formData.registrationDate, formData.subscriptionType)
     };
     updateMemberInContext(editingMember.id, updatedData);
+    showToast(`✅ Membre "${formData.fullName}" modifié avec succès!`, 'success');
     setShowForm(false);
     setEditingMember(null);
     resetForm();
   };
   
   // Supprimer un membre
-  const handleDeleteMember = (id) => {
-    if (window.confirm('Êtes-vous sûr de vouloir supprimer ce membre ?')) {
-      deleteMemberFromContext(id);
-    }
+  const handleDeleteMember = (id, memberName) => {
+    showConfirm(
+      `Êtes-vous sûr de vouloir supprimer "${memberName}" ?`,
+      () => {
+        deleteMemberFromContext(id);
+        showToast(`🗑️ Membre "${memberName}" supprimé avec succès!`, 'success');
+      }
+    );
   };
 
   const filteredMembers = members.filter(member =>
@@ -145,7 +167,7 @@ const MembersManagement = ({ userRole, action, onActionComplete }) => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className={`space-y-6 ${isDarkMode ? 'dark-mode-wrapper' : ''}`}>
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
         <div>
@@ -233,27 +255,43 @@ const MembersManagement = ({ userRole, action, onActionComplete }) => {
             </thead>
             <tbody className="divide-y divide-gray-100">
               {filteredMembers.map((member) => (
-                <tr key={member.id} className="hover:bg-gray-50 transition-colors">
+                <tr key={member.id} className={`transition-colors ${
+                  isDarkMode ? 'hover:bg-slate-700/30' : 'hover:bg-gray-50'
+                }`}>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div>
-                      <div className="text-sm font-medium text-[#111827]">{member.fullName}</div>
-                      <div className="text-xs text-[#6B7280]">Inscrit le {member.registrationDate}</div>
+                      <div className={`text-sm font-medium ${
+                        isDarkMode ? 'text-white' : 'text-gray-900'
+                      }`}>{member.fullName}</div>
+                      <div className={`text-xs ${
+                        isDarkMode ? 'text-slate-400' : 'text-gray-600'
+                      }`}>Inscrit le {member.registrationDate}</div>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-[#111827]">{member.email || '-'}</div>
-                    <div className="text-xs text-[#6B7280]">{member.phone || '-'}</div>
+                    <div className={`text-sm ${
+                      isDarkMode ? 'text-white' : 'text-gray-900'
+                    }`}>{member.email || '-'}</div>
+                    <div className={`text-xs ${
+                      isDarkMode ? 'text-slate-400' : 'text-gray-600'
+                    }`}>{member.phone || '-'}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-[#111827]">{member.subscriptionType}</div>
-                    <div className="text-xs text-[#6B7280]">{member.price} DH</div>
+                    <div className={`text-sm font-medium ${
+                      isDarkMode ? 'text-white' : 'text-gray-900'
+                    }`}>{member.subscriptionType}</div>
+                    <div className={`text-xs ${
+                      isDarkMode ? 'text-slate-400' : 'text-gray-600'
+                    }`}>{member.price} DH</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-lg ${getStatusColor(member.status)}`}>
                       {member.status === 'active' ? 'Actif' : 'Expiré'}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-[#6B7280]">
+                  <td className={`px-6 py-4 whitespace-nowrap text-sm ${
+                    isDarkMode ? 'text-slate-400' : 'text-gray-600'
+                  }`}>
                     {member.registrationDate}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -265,7 +303,7 @@ const MembersManagement = ({ userRole, action, onActionComplete }) => {
                         Modifier
                       </button>
                       <button 
-                        onClick={() => handleDeleteMember(member.id)}
+                        onClick={() => handleDeleteMember(member.id, member.fullName)}
                         className="text-[#DC2626] hover:text-[#B91C1C] transition-colors"
                       >
                         Supprimer
@@ -361,17 +399,23 @@ const MembersManagement = ({ userRole, action, onActionComplete }) => {
                 
                 {/* Type d'abonnement */}
                 <div>
-                  <label className="block text-sm font-semibold text-[#111827] mb-2">
-                    Type d'Abonnement <span className="text-[#DC2626]">*</span>
+                  <label className={`block text-sm font-semibold mb-2 ${
+                    isDarkMode ? 'text-white' : 'text-gray-900'
+                  }`}>
+                    Type d'Abonnement <span className="text-red-500">*</span>
                   </label>
                   <div className="grid grid-cols-2 gap-4">
                     <button
                       type="button"
                       onClick={() => handleSubscriptionChange('Month Pass')}
-                      className={`px-4 py-3 rounded-lg font-medium transition-all duration-300 ${
+                      className={`px-4 py-3 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 ${
                         formData.subscriptionType === 'Month Pass'
-                          ? 'bg-[#3B82F6] text-white shadow-sm'
-                          : 'bg-gray-100 text-[#6B7280] hover:bg-gray-200'
+                          ? (isDarkMode 
+                              ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-500/50' 
+                              : 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg')
+                          : (isDarkMode 
+                              ? 'bg-slate-700/50 text-slate-300 hover:bg-slate-700 hover:text-white border border-slate-600' 
+                              : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-900')
                       }`}
                     >
                       Month Pass
@@ -379,10 +423,14 @@ const MembersManagement = ({ userRole, action, onActionComplete }) => {
                     <button
                       type="button"
                       onClick={() => handleSubscriptionChange('Day Pass')}
-                      className={`px-4 py-3 rounded-lg font-medium transition-all duration-300 ${
+                      className={`px-4 py-3 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 ${
                         formData.subscriptionType === 'Day Pass'
-                          ? 'bg-[#3B82F6] text-white shadow-sm'
-                          : 'bg-gray-100 text-[#6B7280] hover:bg-gray-200'
+                          ? (isDarkMode 
+                              ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-500/50' 
+                              : 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg')
+                          : (isDarkMode 
+                              ? 'bg-slate-700/50 text-slate-300 hover:bg-slate-700 hover:text-white border border-slate-600' 
+                              : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-900')
                       }`}
                     >
                       Day Pass
@@ -392,8 +440,10 @@ const MembersManagement = ({ userRole, action, onActionComplete }) => {
                 
                 {/* Prix (modifiable) */}
                 <div>
-                  <label className="block text-sm font-semibold text-[#111827] mb-2">
-                    Prix (DH) <span className="text-[#DC2626]">*</span>
+                  <label className={`block text-sm font-semibold mb-2 ${
+                    isDarkMode ? 'text-white' : 'text-gray-900'
+                  }`}>
+                    Prix (DH) <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="number"
@@ -401,10 +451,16 @@ const MembersManagement = ({ userRole, action, onActionComplete }) => {
                     min="0"
                     value={formData.price}
                     onChange={(e) => setFormData({...formData, price: parseFloat(e.target.value)})}
-                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3B82F6] focus:border-transparent"
+                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-all ${
+                      isDarkMode 
+                        ? 'bg-slate-700/50 border-slate-600 text-white placeholder-slate-400 focus:ring-purple-500/50 focus:border-purple-500' 
+                        : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400 focus:ring-blue-500/50 focus:border-blue-500'
+                    }`}
                     placeholder="200"
                   />
-                  <p className="text-xs text-[#6B7280] mt-1">
+                  <p className={`text-xs mt-1 ${
+                    isDarkMode ? 'text-slate-400' : 'text-gray-600'
+                  }`}>
                     Prix par défaut: {formData.subscriptionType === 'Month Pass' ? '200' : '25'} DH (modifiable)
                   </p>
                 </div>
@@ -418,7 +474,11 @@ const MembersManagement = ({ userRole, action, onActionComplete }) => {
                       setEditingMember(null);
                       resetForm();
                     }}
-                    className="flex-1 px-4 py-2 border border-gray-200 text-[#6B7280] rounded-lg font-semibold hover:bg-gray-50 transition-colors"
+                    className={`flex-1 px-4 py-2 border rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 ${
+                      isDarkMode 
+                        ? 'border-slate-600 text-slate-300 hover:bg-slate-700/50 hover:text-white hover:border-slate-500' 
+                        : 'border-gray-300 text-gray-700 hover:bg-gray-100 hover:text-gray-900 hover:border-gray-400'
+                    }`}
                   >
                     Annuler
                   </button>
@@ -430,6 +490,97 @@ const MembersManagement = ({ userRole, action, onActionComplete }) => {
                   </button>
                 </div>
               </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Toast Notification Moderne */}
+      {toast.show && (
+        <div className="fixed top-4 right-4 z-50 animate-slide-in-right">
+          <div className={`flex items-center space-x-3 px-6 py-4 rounded-xl shadow-2xl backdrop-blur-xl border transform transition-all duration-300 ${
+            toast.type === 'success' 
+              ? 'bg-gradient-to-r from-emerald-500/90 to-teal-500/90 border-emerald-400/50 text-white' 
+              : toast.type === 'error'
+              ? 'bg-gradient-to-r from-red-500/90 to-rose-500/90 border-red-400/50 text-white'
+              : 'bg-gradient-to-r from-blue-500/90 to-cyan-500/90 border-blue-400/50 text-white'
+          }`}>
+            <div className="flex-shrink-0">
+              {toast.type === 'success' && (
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              )}
+              {toast.type === 'error' && (
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              )}
+            </div>
+            <p className="font-semibold text-sm">{toast.message}</p>
+            <button 
+              onClick={() => setToast({ show: false, message: '', type: '' })}
+              className="flex-shrink-0 ml-4 hover:bg-white/20 rounded-lg p-1 transition-colors"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Dialog de Confirmation Moderne */}
+      {confirmDialog.show && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+          <div className={`w-full max-w-md rounded-2xl shadow-2xl transform transition-all duration-300 animate-scale-in ${
+            isDarkMode 
+              ? 'bg-slate-800 border border-slate-700' 
+              : 'bg-white border border-gray-200'
+          }`}>
+            <div className="p-6">
+              <div className="flex items-start space-x-4">
+                <div className="flex-shrink-0">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-r from-orange-500 to-red-500 flex items-center justify-center">
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <h3 className={`text-lg font-bold mb-2 ${
+                    isDarkMode ? 'text-white' : 'text-gray-900'
+                  }`}>
+                    Confirmation
+                  </h3>
+                  <p className={`text-sm ${
+                    isDarkMode ? 'text-slate-300' : 'text-gray-600'
+                  }`}>
+                    {confirmDialog.message}
+                  </p>
+                </div>
+              </div>
+              <div className="flex space-x-3 mt-6">
+                <button
+                  onClick={() => setConfirmDialog({ show: false, message: '', onConfirm: null })}
+                  className={`flex-1 px-4 py-2.5 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 ${
+                    isDarkMode 
+                      ? 'bg-slate-700 text-slate-300 hover:bg-slate-600 hover:text-white' 
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  Annuler
+                </button>
+                <button
+                  onClick={() => {
+                    if (confirmDialog.onConfirm) confirmDialog.onConfirm();
+                    setConfirmDialog({ show: false, message: '', onConfirm: null });
+                  }}
+                  className="flex-1 px-4 py-2.5 bg-gradient-to-r from-red-600 to-rose-600 text-white rounded-lg font-semibold hover:from-red-700 hover:to-rose-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                >
+                  Confirmer
+                </button>
+              </div>
             </div>
           </div>
         </div>
